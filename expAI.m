@@ -62,6 +62,11 @@ end
 
 % Parse parameters
 pars = ui.parameters('Exporting_To_Illustrator',varargin{:});
+set(fig, 'Renderer', 'painters', ...
+    'PaperSize', pars.PaperSize, ...
+    'PaperUnits', pars.PaperUnits, ...
+    'PaperOrientation', pars.PaperOrientation, ...
+    'PaperType', pars.PaperType);
 
 % Parse second input
 if nargin < 2
@@ -160,9 +165,18 @@ if isempty(fig.UserData)
    fig.UserData = struct;
    fig.UserData.VectorGraphicsExported = true;
    fig.UserData.VectorGraphicsName = outputname;
+   fig.UserData.VectorGraphicsExportFcn = @()ui.expAI(fig, outputname);
 elseif isstruct(fig.UserData)
    fig.UserData.VectorGraphicsExported = true;
    fig.UserData.VectorGraphicsName = outputname;
+   fig.UserData.VectorGraphicsExportFcn = @()ui.expAI(fig, outputname);
+end
+
+if nargout < 1
+    [p, f, ~] = fileparts(outputname);
+    saveas(fig,  fullfile(p, [f,'.png']));
+    savefig(fig, fullfile(p, [f '.fig']));
+    delete(fig);
 end
 
 end

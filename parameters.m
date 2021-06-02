@@ -17,7 +17,7 @@ elseif iscell(name)
     name = 'ui';
 end
 
-pars = p.(name);
+pars = ui.p.(name);
 f = fieldnames(pars);
 for iV = 1:2:numel(varargin)
    idx = strcmpi(f, varargin{iV});
